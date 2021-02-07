@@ -1,21 +1,26 @@
 package com.bank_system.bank.service.interfaces;
 
-import com.bank_system.bank.model.BankAccount;
-import com.bank_system.bank.model.Recipient;
-import com.bank_system.bank.model.Transaction;
-
 import java.security.Principal;
 import java.util.List;
 
+import com.bank_system.bank.model.*;
+import com.example.bank.model.*;
+import com.bank_system.bank.model.Account1Transaction;
+
 public interface ITransactionService {
-    List<Transaction> findAccountTransactionList(String username);
+	List<Account1Transaction> findAccount1TransactionList(String username);
 
-    void saveAccountDepositTransaction(Transaction transaction);
+    List<Account2Transaction> findAccount2TransactionList(String username);
 
-    void saveAccountWithdrawTransaction(Transaction transaction);
+    void saveAccount1DepositTransaction(Account1Transaction account1Transaction);
 
-    void betweenAccountsTransfer(String transferFrom, String transferTo, String amount, BankAccount account1, BankAccount account2) throws Exception;
-
+    void saveAccount2DepositTransaction(Account2Transaction account2Transaction);
+    
+    void saveAccount1WithdrawTransaction(Account1Transaction account1Transaction);
+    void saveAccount2WithdrawTransaction(Account2Transaction account2Transaction);
+    
+    void betweenAccountsTransfer(String transferFrom, String transferTo, String amount, Account1 account1, Account2 account2) throws Exception;
+    
     List<Recipient> findRecipientList(Principal principal);
 
     Recipient saveRecipient(Recipient recipient);
@@ -23,6 +28,6 @@ public interface ITransactionService {
     Recipient findRecipientByName(String recipientName);
 
     void deleteRecipientByName(String recipientName);
-
-    void toSomeoneElseTransfer(Recipient recipient, String accountType, String amount, BankAccount account1, BankAccount account2);
+    
+    void toSomeoneElseTransfer(Recipient recipient, String accountType, String amount, Account1 account1, Account2 account2);
 }

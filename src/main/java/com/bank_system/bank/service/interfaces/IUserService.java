@@ -1,13 +1,13 @@
 package com.bank_system.bank.service.interfaces;
 
-import com.bank_system.bank.model.User;
-import com.bank_system.bank.model.security.UserRole;
-
 import java.util.List;
 import java.util.Set;
 
+import com.bank_system.bank.model.User;
+import com.bank_system.bank.model.security.UserRole;
+
 public interface IUserService {
-    User findByUsername(String username);
+	User findByUsername(String username);
 
     User findByEmail(String email);
 
@@ -16,13 +16,13 @@ public interface IUserService {
     boolean checkUsernameExists(String username);
 
     boolean checkEmailExists(String email);
-
+    
     void save (User user);
-
+    
     User createUser(User user, Set<UserRole> userRoles);
-
-    User saveUser (User user);
-
+    
+    User saveUser (User user); 
+    
     List<User> findUserList();
 
     void enableUser (String username);

@@ -1,14 +1,20 @@
 package com.bank_system.bank.rest;
 
-import com.bank_system.bank.model.Transaction;
+import java.util.List;
+
+import com.bank_system.bank.model.Account1Transaction;
+import com.bank_system.bank.model.Account2Transaction;
 import com.bank_system.bank.model.User;
-import com.bank_system.bank.service.interfaces.ITransactionService;
-import com.bank_system.bank.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.bank_system.bank.service.interfaces.ITransactionService;
+import com.bank_system.bank.service.interfaces.IUserService;
 
 @RestController
 @RequestMapping("/api")
@@ -16,28 +22,33 @@ import java.util.List;
 public class UserRest {
 
     @Autowired
-    private IUserService userService;
+    private IUserService IUserService;
 
     @Autowired
-    private ITransactionService transactionService;
+    private ITransactionService ITransactionService;
 
     @RequestMapping(value = "/user/all", method = RequestMethod.GET)
     public List<User> userList() {
-        return userService.findUserList();
+        return IUserService.findUserList();
     }
 
     @RequestMapping(value = "/user/primary/transaction", method = RequestMethod.GET)
-    public List<Transaction> getPrimaryTransactionList(@RequestParam("username") String username) {
-        return transactionService.findAccountTransactionList(username);
+    public List<Account1Transaction> getPrimaryTransactionList(@RequestParam("username") String username) {
+        return ITransactionService.findAccount1TransactionList(username);
+    }
+
+    @RequestMapping(value = "/user/savings/transaction", method = RequestMethod.GET)
+    public List<Account2Transaction> getSavingsTransactionList(@RequestParam("username") String username) {
+        return ITransactionService.findAccount2TransactionList(username);
     }
 
     @RequestMapping("/user/{username}/enable")
     public void enableUser(@PathVariable("username") String username) {
-        userService.enableUser(username);
+        IUserService.enableUser(username);
     }
 
     @RequestMapping("/user/{username}/disable")
     public void diableUser(@PathVariable("username") String username) {
-        userService.disableUser(username);
+        IUserService.disableUser(username);
     }
 }

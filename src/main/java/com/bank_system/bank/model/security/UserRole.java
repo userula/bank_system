@@ -1,7 +1,6 @@
 package com.bank_system.bank.model.security;
 
 import com.bank_system.bank.model.User;
-import org.apache.catalina.Role;
 
 import javax.persistence.*;
 
@@ -20,7 +19,6 @@ public class UserRole {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
@@ -51,7 +49,4 @@ public class UserRole {
     public void setRole(Role role) {
         this.role = role;
     }
-
-
 }
-

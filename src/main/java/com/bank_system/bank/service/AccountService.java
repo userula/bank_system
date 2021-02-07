@@ -1,69 +1,105 @@
 package com.bank_system.bank.service;
 
-import com.bank_system.bank.dao.AccountDao;
-import com.bank_system.bank.model.BankAccount;
-import com.bank_system.bank.model.Transaction;
-import com.bank_system.bank.model.User;
-import com.bank_system.bank.service.interfaces.ITransactionService;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.math.BigDecimal;
 import java.security.Principal;
 import java.util.Date;
 
-public class AccountService {
+import com.bank_system.bank.dao.Account1Dao;
+import com.bank_system.bank.dao.Account2Dao;
+import com.bank_system.bank.model.*;
+import com.example.bank.model.*;
+import com.bank_system.bank.service.interfaces.ITransactionService;
+import com.bank_system.bank.service.interfaces.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-    private static int nextAccountNumber = 11223145;
+import com.bank_system.bank.model.Account1;
+import com.bank_system.bank.service.interfaces.IAccountService;
+
+@Service
+public class AccountService implements IAccountService {
+	
+	private static int nextAccountNumber = 11223145;
 
     @Autowired
-    private AccountDao accountDao;
+    private Account1Dao account1Dao;
 
     @Autowired
-    private UserService userService;
+    private Account2Dao account2Dao;
 
     @Autowired
-    private ITransactionService transactionService;
+    private IUserService IUserService;
+    
+    @Autowired
+    private ITransactionService ITransactionService;
 
-    public BankAccount createAccount() {
-        BankAccount account = new BankAccount();
-        account.setAccountBalance(new BigDecimal(0.0));
-        account.setAccountNumber(accountGen());
+    public Account1 createAccount1() {
+        Account1 account1 = new Account1();
+        account1.setAccountBalance(new BigDecimal(0.0));
+        account1.setAccountNumber(accountGen());
 
-        accountDao.save(account);
+        account1Dao.save(account1);
 
-        return accountDao.findByAccountNumber(account.getAccountNumber());
+        return account1Dao.findByAccountNumber(account1.getAccountNumber());
     }
 
+    public Account2 createAccount2() {
+        Account2 account2 = new Account2();
+        account2.setAccountBalance(new BigDecimal(0.0));
+        account2.setAccountNumber(accountGen());
+
+        account2Dao.save(account2);
+
+        return account2Dao.findByAccountNumber(account2.getAccountNumber());
+    }
+    
     public void deposit(String accountType, double amount, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
+        User user = IUserService.findByUsername(principal.getName());
 
-        if (accountType.equalsIgnoreCase("Primary")) {
-            BankAccount account = user.getBankAccount();
-            account.setAccountBalance(account.getAccountBalance().add(new BigDecimal(amount)));
-            accountDao.save(account);
+        if (accountType.equalsIgnoreCase("Account1")) {
+            Account1 account1 = user.getAccount1();
+            account1.setAccountBalance(account1.getAccountBalance().add(new BigDecimal(amount)));
+            account1Dao.save(account1);
 
             Date date = new Date();
 
-            Transaction primaryTransaction = new Transaction(date, "Deposit to Primary Account", "Account", "Finished", amount, account.getAccountBalance(), account);
-            transactionService.saveAccountDepositTransaction(primaryTransaction);
+            Account1Transaction account1Transaction = new Account1Transaction(date, "Deposit to Account1", "Account", "Finished", amount, account1.getAccountBalance(), account1);
+            ITransactionService.saveAccount1DepositTransaction(account1Transaction);
+            
+        } else if (accountType.equalsIgnoreCase("Account2")) {
+            Account2 account2 = user.getAccount2();
+            account2.setAccountBalance(account2.getAccountBalance().add(new BigDecimal(amount)));
+            account2Dao.save(account2);
+
+            Date date = new Date();
+            Account2Transaction account2Transaction = new Account2Transaction(date, "Deposit to Account2", "Account", "Finished", amount, account2.getAccountBalance(), account2);
+            ITransactionService.saveAccount2DepositTransaction(account2Transaction);
         }
     }
-
+    
     public void withdraw(String accountType, double amount, Principal principal) {
-        User user = userService.findByUsername(principal.getName());
+        User user = IUserService.findByUsername(principal.getName());
 
-        if (accountType.equalsIgnoreCase("Primary")) {
-            BankAccount primaryAccount = user.getBankAccount();
-            primaryAccount.setAccountBalance(primaryAccount.getAccountBalance().subtract(new BigDecimal(amount)));
-            accountDao.save(primaryAccount);
+        if (accountType.equalsIgnoreCase("Account1")) {
+            Account1 account1 = user.getAccount1();
+            account1.setAccountBalance(account1.getAccountBalance().subtract(new BigDecimal(amount)));
+            account1Dao.save(account1);
 
             Date date = new Date();
 
-            Transaction primaryTransaction = new Transaction(date, "Withdraw from Primary Account", "Account", "Finished", amount, primaryAccount.getAccountBalance(), primaryAccount);
-            transactionService.saveAccountWithdrawTransaction(primaryTransaction);
+            Account1Transaction account1Transaction = new Account1Transaction(date, "Withdraw from Account1", "Account", "Finished", amount, account1.getAccountBalance(), account1);
+            ITransactionService.saveAccount1WithdrawTransaction(account1Transaction);
+        } else if (accountType.equalsIgnoreCase("Account2")) {
+            Account2 account2 = user.getAccount2();
+            account2.setAccountBalance(account2.getAccountBalance().subtract(new BigDecimal(amount)));
+            account2Dao.save(account2);
+
+            Date date = new Date();
+            Account2Transaction account2Transaction = new Account2Transaction(date, "Withdraw from Account2", "Account", "Finished", amount, account2.getAccountBalance(), account2);
+            ITransactionService.saveAccount2WithdrawTransaction(account2Transaction);
         }
     }
-
+    
     private int accountGen() {
         return ++nextAccountNumber;
     }

@@ -34,7 +34,10 @@ public class User implements UserDetails{
     private boolean enabled=true;
 
     @OneToOne
-    private BankAccount bankAccount;
+    private Account1 account1;
+
+    @OneToOne
+    private Account2 account2;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Recipient> recipientList;
@@ -115,6 +118,26 @@ public class User implements UserDetails{
         this.password = password;
     }
 
+    public Account1 getAccount1() {
+        return account1;
+    }
+
+    public void setAccount1(Account1 account1) {
+        this.account1 = account1;
+    }
+
+    public Account2 getAccount2() {
+        return account2;
+    }
+
+    public void setAccount2(Account2 account2) {
+        this.account2 = account2;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -157,19 +180,8 @@ public class User implements UserDetails{
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return enabled;
     }
 
-    public BankAccount getBankAccount() {
-        return bankAccount;
-    }
 
-    public void setBankAccount(BankAccount bankAccount) {
-        this.bankAccount = bankAccount;
-    }
-
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
-    }
 }
-
