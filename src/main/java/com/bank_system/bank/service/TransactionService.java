@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.bank_system.bank.model.*;
-import com.example.bank.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -72,7 +71,7 @@ public class TransactionService implements ITransactionService {
     }
     
     public void betweenAccountsTransfer(String transferFrom, String transferTo, String amount, Account1 account1, Account2 account2) throws Exception {
-        if (transferFrom.equalsIgnoreCase("Primary") && transferTo.equalsIgnoreCase("Savings")) {
+        if (transferFrom.equalsIgnoreCase("Account1") && transferTo.equalsIgnoreCase("Account2")) {
             account1.setAccountBalance(account1.getAccountBalance().subtract(new BigDecimal(amount)));
             account2.setAccountBalance(account2.getAccountBalance().add(new BigDecimal(amount)));
             account1Dao.save(account1);
@@ -82,7 +81,7 @@ public class TransactionService implements ITransactionService {
 
             Account1Transaction account1Transaction = new Account1Transaction(date, "Between account transfer from "+transferFrom+" to "+transferTo, "Account", "Finished", Double.parseDouble(amount), account1.getAccountBalance(), account1);
             account1TransactionDao.save(account1Transaction);
-        } else if (transferFrom.equalsIgnoreCase("Savings") && transferTo.equalsIgnoreCase("Primary")) {
+        } else if (transferFrom.equalsIgnoreCase("Account2") && transferTo.equalsIgnoreCase("Account1")) {
             account1.setAccountBalance(account1.getAccountBalance().add(new BigDecimal(amount)));
             account2.setAccountBalance(account2.getAccountBalance().subtract(new BigDecimal(amount)));
             account1Dao.save(account1);
@@ -99,8 +98,8 @@ public class TransactionService implements ITransactionService {
     
     public List<Recipient> findRecipientList(Principal principal) {
         String username = principal.getName();
-        List<Recipient> recipientList = recipientDao.findAll().stream() 			//convert list to stream
-                .filter(recipient -> username.equals(recipient.getUser().getUsername()))	//filters the line, equals to username
+        List<Recipient> recipientList = recipientDao.findAll().stream()
+                .filter(recipient -> username.equals(recipient.getUser().getUsername()))
                 .collect(Collectors.toList());
 
         return recipientList;
@@ -119,7 +118,7 @@ public class TransactionService implements ITransactionService {
     }
     
     public void toSomeoneElseTransfer(Recipient recipient, String accountType, String amount, Account1 account1, Account2 account2) {
-        if (accountType.equalsIgnoreCase("Primary")) {
+        if (accountType.equalsIgnoreCase("Account1")) {
             account1.setAccountBalance(account1.getAccountBalance().subtract(new BigDecimal(amount)));
             account1Dao.save(account1);
 
@@ -127,7 +126,7 @@ public class TransactionService implements ITransactionService {
 
             Account1Transaction account1Transaction = new Account1Transaction(date, "Transfer to recipient "+recipient.getName(), "Transfer", "Finished", Double.parseDouble(amount), account1.getAccountBalance(), account1);
             account1TransactionDao.save(account1Transaction);
-        } else if (accountType.equalsIgnoreCase("Savings")) {
+        } else if (accountType.equalsIgnoreCase("Account2")) {
             account2.setAccountBalance(account2.getAccountBalance().subtract(new BigDecimal(amount)));
             account2Dao.save(account2);
 

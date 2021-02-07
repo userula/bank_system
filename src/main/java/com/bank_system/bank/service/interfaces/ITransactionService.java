@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.List;
 
 import com.bank_system.bank.model.*;
-import com.example.bank.model.*;
 import com.bank_system.bank.model.Account1Transaction;
 
 public interface ITransactionService {

@@ -4,7 +4,6 @@ import java.security.Principal;
 import java.util.List;
 
 import com.bank_system.bank.model.*;
-import com.example.bank.model.*;
 import com.bank_system.bank.service.interfaces.IAccountService;
 import com.bank_system.bank.service.interfaces.ITransactionService;
 import org.springframework.beans.factory.annotation.Autowired;

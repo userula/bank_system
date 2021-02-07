@@ -7,7 +7,6 @@ import java.util.Date;
 import com.bank_system.bank.dao.Account1Dao;
 import com.bank_system.bank.dao.Account2Dao;
 import com.bank_system.bank.model.*;
-import com.example.bank.model.*;
 import com.bank_system.bank.service.interfaces.ITransactionService;
 import com.bank_system.bank.service.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
